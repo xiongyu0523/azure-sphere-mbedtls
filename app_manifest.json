@@ -1,0 +1,14 @@
+{
+  "SchemaVersion": 1,
+  "Name" : "azure_sphere_mbedtls",
+  "ComponentId" : "7cb85673-0699-474c-bde2-c89844c51a1a",
+  "EntryPoint": "/bin/app",
+  "CmdArgs": [],
+  "Capabilities": {
+    "AllowedConnections": [],
+    "Gpio": [ 9 ],
+    "Uart": [],
+    "WifiConfig": false
+  },
+  "ApplicationType":"Default"
+}
