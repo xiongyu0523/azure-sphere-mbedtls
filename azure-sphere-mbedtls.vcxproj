@@ -25,7 +25,7 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" Label="Configuration">
     <UseDebugLibraries>true</UseDebugLibraries>
-    <TargetSysroot>2</TargetSysroot>
+    <TargetSysroot>2+Beta1905</TargetSysroot>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" Label="Configuration">
     <UseDebugLibraries>false</UseDebugLibraries>
@@ -121,6 +121,11 @@
     <ClCompile Include="mbedtls\library\x509_csr.c" />
     <ClCompile Include="mbedtls\library\xtea.c" />
     <UpToDateCheckInput Include="app_manifest.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="GlobalSignOrganizationValidationCASHA256G2.crt">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">true</DeploymentContent>
+    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

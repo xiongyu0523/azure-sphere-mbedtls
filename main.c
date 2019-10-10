@@ -15,6 +15,7 @@
 #include "mbedtls/error.h"
 #include "mbedtls/certs.h"
 
+#include <unistd.h>
 #include <stdbool.h>
 #include <errno.h>
 #include <string.h>
@@ -22,46 +23,14 @@
 #include <sys/random.h>
 #include <applibs/log.h>
 #include <applibs/networking.h>
+#include <applibs/storage.h>
 
 #define SERVER_PORT "443"
 #define SERVER_NAME "www.baidu.com"
 #define GET_REQUEST "GET / HTTP/1.0\r\n\r\n"
 
 #define DEBUG_LEVEL 1
-
-#define GlobalSign_Organization_Validation_CA_SHA256_G2												   \
-"-----BEGIN CERTIFICATE-----\r\n"                                      \
-"MIIEaTCCA1GgAwIBAgILBAAAAAABRE7wQkcwDQYJKoZIhvcNAQELBQAwVzELMAkG\r\n" \
-"A1UEBhMCQkUxGTAXBgNVBAoTEEdsb2JhbFNpZ24gbnYtc2ExEDAOBgNVBAsTB1Jv\r\n" \
-"b3QgQ0ExGzAZBgNVBAMTEkdsb2JhbFNpZ24gUm9vdCBDQTAeFw0xNDAyMjAxMDAw\r\n" \
-"MDBaFw0yNDAyMjAxMDAwMDBaMGYxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9i\r\n" \
-"YWxTaWduIG52LXNhMTwwOgYDVQQDEzNHbG9iYWxTaWduIE9yZ2FuaXphdGlvbiBW\r\n" \
-"YWxpZGF0aW9uIENBIC0gU0hBMjU2IC0gRzIwggEiMA0GCSqGSIb3DQEBAQUAA4IB\r\n" \
-"DwAwggEKAoIBAQDHDmw/I5N/zHClnSDDDlM/fsBOwphJykfVI+8DNIV0yKMCLkZc\r\n" \
-"C33JiJ1Pi/D4nGyMVTXbv/Kz6vvjVudKRtkTIso21ZvBqOOWQ5PyDLzm+ebomchj\r\n" \
-"SHh/VzZpGhkdWtHUfcKc1H/hgBKueuqI6lfYygoKOhJJomIZeg0k9zfrtHOSewUj\r\n" \
-"mxK1zusp36QUArkBpdSmnENkiN74fv7j9R7l/tyjqORmMdlMJekYuYlZCa7pnRxt\r\n" \
-"Nw9KHjUgKOKv1CGLAcRFrW4rY6uSa2EKTSDtc7p8zv4WtdufgPDWi2zZCHlKT3hl\r\n" \
-"2pK8vjX5s8T5J4BO/5ZS5gIg4Qdz6V0rvbLxAgMBAAGjggElMIIBITAOBgNVHQ8B\r\n" \
-"Af8EBAMCAQYwEgYDVR0TAQH/BAgwBgEB/wIBADAdBgNVHQ4EFgQUlt5h8b0cFilT\r\n" \
-"HMDMfTuDAEDmGnwwRwYDVR0gBEAwPjA8BgRVHSAAMDQwMgYIKwYBBQUHAgEWJmh0\r\n" \
-"dHBzOi8vd3d3Lmdsb2JhbHNpZ24uY29tL3JlcG9zaXRvcnkvMDMGA1UdHwQsMCow\r\n" \
-"KKAmoCSGImh0dHA6Ly9jcmwuZ2xvYmFsc2lnbi5uZXQvcm9vdC5jcmwwPQYIKwYB\r\n" \
-"BQUHAQEEMTAvMC0GCCsGAQUFBzABhiFodHRwOi8vb2NzcC5nbG9iYWxzaWduLmNv\r\n" \
-"bS9yb290cjEwHwYDVR0jBBgwFoAUYHtmGkUNl8qJUC99BM00qP/8/UswDQYJKoZI\r\n" \
-"hvcNAQELBQADggEBAEYq7l69rgFgNzERhnF0tkZJyBAW/i9iIxerH4f4gu3K3w4s\r\n" \
-"32R1juUYcqeMOovJrKV3UPfvnqTgoI8UV6MqX+x+bRDmuo2wCId2Dkyy2VG7EQLy\r\n" \
-"XN0cvfNVlg/UBsD84iOKJHDTu/B5GqdhcIOKrwbFINihY9Bsrk8y1658GEV1BSl3\r\n" \
-"30JAZGSGvip2CTFvHST0mdCF/vIhCPnG9vHQWe3WVjwIKANnuvD58ZAWR65n5ryA\r\n" \
-"SOlCdjSXVWkkDoPWoC209fN5ikkodBpBocLTJIg1MGCUF7ThBCIxPTsvFwayuJ2G\r\n" \
-"K1pp74P1S8SqtCr4fKGxhZSM9AyHDPSsQPhZSZg=\r\n"                         \
-"-----END CERTIFICATE-----\r\n"
-
-const char user_CA_pem[] = 
-	GlobalSign_Organization_Validation_CA_SHA256_G2
-	"";
-const size_t user_CA_pem_len = sizeof(user_CA_pem);
-
+#define CERTIFICATE_MAX_LENGTH   8192
 
 static void my_debug(void* ctx, int level,
 	const char* file, int line,
@@ -96,7 +65,7 @@ int main(void)
 	mbedtls_net_context server_fd;
 	uint32_t flags;
 	unsigned char buf[1024];
-	const char* pers = "ssl_client1";
+	const char* pers = "azure sphere SSL client";
 
 	mbedtls_entropy_context entropy;
 	mbedtls_ctr_drbg_context ctr_drbg;
@@ -107,6 +76,13 @@ int main(void)
 #if defined(MBEDTLS_DEBUG_C)
 	mbedtls_debug_set_threshold(DEBUG_LEVEL);
 #endif
+
+	/*
+	 * 0. Ensure network is ready before start SSL client
+	 */
+	bool isNetworkingReady = false;
+	while ((Networking_IsNetworkingReady(&isNetworkingReady) < 0) || !isNetworkingReady);
+	Log_Debug("\n  . Azure Sphere network is... ok");
 
 	/*
 	 * 0. Initialize the RNG and the session data
@@ -138,18 +114,40 @@ int main(void)
 	mbedtls_printf("  . Loading the CA root certificate ...");
 	fflush(stdout);
 
-	ret = mbedtls_x509_crt_parse(&cacert, (const unsigned char*)user_CA_pem, user_CA_pem_len);
-	if (ret < 0)
-	{
-		mbedtls_printf(" failed\n  !  mbedtls_x509_crt_parse returned -0x%x\n\n", -ret);
+	ret = Storage_OpenFileInImagePackage("GlobalSignOrganizationValidationCASHA256G2.crt");
+	if (ret < 0) {
+		mbedtls_printf(" failed\n  !  Storage_OpenFileInImagePackage fail\n\n");
 		goto exit;
 	}
 
-	mbedtls_printf(" ok (%d skipped)\n", ret);
+	int cert_fd = ret;
 
-	bool isNetworkingReady = false;
-	while ((Networking_IsNetworkingReady(&isNetworkingReady) < 0) || !isNetworkingReady);
-	Log_Debug("  . Azure Sphere network is ready!!\n");
+	char *p_cert_file = malloc(CERTIFICATE_MAX_LENGTH); // certificate will not exceed 8KB
+	if (p_cert_file == NULL) {
+		mbedtls_printf(" failed\n  !  malloc fail\n\n");
+		close(cert_fd);
+		goto exit;
+	}
+	ret = read(cert_fd, p_cert_file, CERTIFICATE_MAX_LENGTH);
+	if (ret < 0) {
+		mbedtls_printf(" failed\n  !  read fail\n\n");
+		close(cert_fd);
+		free(p_cert_file);
+		goto exit;
+	}
+
+	ret = mbedtls_x509_crt_parse_der(&cacert, p_cert_file, ret);
+	if (ret < 0) {
+		mbedtls_printf(" failed\n  !  mbedtls_x509_crt_parse_der returned -0x%x\n\n", -ret);
+		close(cert_fd);
+		free(p_cert_file);
+		goto exit;
+	}
+
+	free(p_cert_file);
+	close(cert_fd);
+
+	mbedtls_printf(" ok (%d skipped)\n", ret);
 
 	/*
 	 * 1. Start the connection
@@ -236,6 +234,8 @@ int main(void)
 		mbedtls_x509_crt_verify_info(vrfy_buf, sizeof(vrfy_buf), "  ! ", flags);
 
 		mbedtls_printf("%s\n", vrfy_buf);
+
+		goto exit;
 	}
 	else
 		mbedtls_printf(" ok\n");
@@ -316,11 +316,6 @@ exit:
 	mbedtls_ssl_config_free(&conf);
 	mbedtls_ctr_drbg_free(&ctr_drbg);
 	mbedtls_entropy_free(&entropy);
-
-#if defined(_WIN32)
-	mbedtls_printf("  + Press Enter to exit this program.\n");
-	fflush(stdout); getchar();
-#endif
 
 	return(exit_code);
 }

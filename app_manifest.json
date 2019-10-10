@@ -5,7 +5,8 @@
   "EntryPoint": "/bin/app",
   "CmdArgs": [],
   "Capabilities": {
-    "AllowedConnections": ["www.baidu.com"],
+    "AllowedConnections": [ "www.baidu.com" ],
+    "MutableStorage": { "SizeKB": 8 },
     "Gpio": [ 9 ],
     "Uart": [],
     "WifiConfig": false
