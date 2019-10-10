@@ -36,8 +36,90 @@
   <ImportGroup Label="Shared" />
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <IncludePath>$(SysRootIncludePath);$(IncludePath);</IncludePath>
+  </PropertyGroup>
   <ItemGroup>
     <ClCompile Include="main.c" />
+    <ClCompile Include="mbedtls\library\aes.c" />
+    <ClCompile Include="mbedtls\library\aesni.c" />
+    <ClCompile Include="mbedtls\library\arc4.c" />
+    <ClCompile Include="mbedtls\library\aria.c" />
+    <ClCompile Include="mbedtls\library\asn1parse.c" />
+    <ClCompile Include="mbedtls\library\asn1write.c" />
+    <ClCompile Include="mbedtls\library\base64.c" />
+    <ClCompile Include="mbedtls\library\bignum.c" />
+    <ClCompile Include="mbedtls\library\blowfish.c" />
+    <ClCompile Include="mbedtls\library\camellia.c" />
+    <ClCompile Include="mbedtls\library\ccm.c" />
+    <ClCompile Include="mbedtls\library\certs.c" />
+    <ClCompile Include="mbedtls\library\chacha20.c" />
+    <ClCompile Include="mbedtls\library\chachapoly.c" />
+    <ClCompile Include="mbedtls\library\cipher.c" />
+    <ClCompile Include="mbedtls\library\cipher_wrap.c" />
+    <ClCompile Include="mbedtls\library\cmac.c" />
+    <ClCompile Include="mbedtls\library\ctr_drbg.c" />
+    <ClCompile Include="mbedtls\library\debug.c" />
+    <ClCompile Include="mbedtls\library\des.c" />
+    <ClCompile Include="mbedtls\library\dhm.c" />
+    <ClCompile Include="mbedtls\library\ecdh.c" />
+    <ClCompile Include="mbedtls\library\ecdsa.c" />
+    <ClCompile Include="mbedtls\library\ecjpake.c" />
+    <ClCompile Include="mbedtls\library\ecp.c" />
+    <ClCompile Include="mbedtls\library\ecp_curves.c" />
+    <ClCompile Include="mbedtls\library\entropy.c" />
+    <ClCompile Include="mbedtls\library\entropy_poll.c" />
+    <ClCompile Include="mbedtls\library\error.c" />
+    <ClCompile Include="mbedtls\library\gcm.c" />
+    <ClCompile Include="mbedtls\library\havege.c" />
+    <ClCompile Include="mbedtls\library\hkdf.c" />
+    <ClCompile Include="mbedtls\library\hmac_drbg.c" />
+    <ClCompile Include="mbedtls\library\md.c" />
+    <ClCompile Include="mbedtls\library\md2.c" />
+    <ClCompile Include="mbedtls\library\md4.c" />
+    <ClCompile Include="mbedtls\library\md5.c" />
+    <ClCompile Include="mbedtls\library\md_wrap.c" />
+    <ClCompile Include="mbedtls\library\memory_buffer_alloc.c" />
+    <ClCompile Include="mbedtls\library\net_sockets.c" />
+    <ClCompile Include="mbedtls\library\nist_kw.c" />
+    <ClCompile Include="mbedtls\library\oid.c" />
+    <ClCompile Include="mbedtls\library\padlock.c" />
+    <ClCompile Include="mbedtls\library\pem.c" />
+    <ClCompile Include="mbedtls\library\pk.c" />
+    <ClCompile Include="mbedtls\library\pkcs11.c" />
+    <ClCompile Include="mbedtls\library\pkcs12.c" />
+    <ClCompile Include="mbedtls\library\pkcs5.c" />
+    <ClCompile Include="mbedtls\library\pkparse.c" />
+    <ClCompile Include="mbedtls\library\pkwrite.c" />
+    <ClCompile Include="mbedtls\library\pk_wrap.c" />
+    <ClCompile Include="mbedtls\library\platform.c" />
+    <ClCompile Include="mbedtls\library\platform_util.c" />
+    <ClCompile Include="mbedtls\library\poly1305.c" />
+    <ClCompile Include="mbedtls\library\ripemd160.c" />
+    <ClCompile Include="mbedtls\library\rsa.c" />
+    <ClCompile Include="mbedtls\library\rsa_internal.c" />
+    <ClCompile Include="mbedtls\library\sha1.c" />
+    <ClCompile Include="mbedtls\library\sha256.c" />
+    <ClCompile Include="mbedtls\library\sha512.c" />
+    <ClCompile Include="mbedtls\library\ssl_cache.c" />
+    <ClCompile Include="mbedtls\library\ssl_ciphersuites.c" />
+    <ClCompile Include="mbedtls\library\ssl_cli.c" />
+    <ClCompile Include="mbedtls\library\ssl_cookie.c" />
+    <ClCompile Include="mbedtls\library\ssl_srv.c" />
+    <ClCompile Include="mbedtls\library\ssl_ticket.c" />
+    <ClCompile Include="mbedtls\library\ssl_tls.c" />
+    <ClCompile Include="mbedtls\library\threading.c" />
+    <ClCompile Include="mbedtls\library\timing.c" />
+    <ClCompile Include="mbedtls\library\version.c" />
+    <ClCompile Include="mbedtls\library\version_features.c" />
+    <ClCompile Include="mbedtls\library\x509.c" />
+    <ClCompile Include="mbedtls\library\x509write_crt.c" />
+    <ClCompile Include="mbedtls\library\x509write_csr.c" />
+    <ClCompile Include="mbedtls\library\x509_create.c" />
+    <ClCompile Include="mbedtls\library\x509_crl.c" />
+    <ClCompile Include="mbedtls\library\x509_crt.c" />
+    <ClCompile Include="mbedtls\library\x509_csr.c" />
+    <ClCompile Include="mbedtls\library\xtea.c" />
     <UpToDateCheckInput Include="app_manifest.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
@@ -45,6 +127,8 @@
   <ItemDefinitionGroup>
     <ClCompile>
       <AdditionalOptions>-Werror=implicit-function-declaration %(AdditionalOptions)</AdditionalOptions>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">_POSIX_C_SOURCE;%(PreprocessorDefinitions);</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">$(SysRootIncludePath);%(AdditionalIncludeDirectories);.\mbedtls\include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <LibraryDependencies>applibs;pthread;gcc_s;c</LibraryDependencies>

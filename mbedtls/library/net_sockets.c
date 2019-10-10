@@ -281,6 +281,7 @@ static int net_would_block( const mbedtls_net_context *ctx )
  */
 static int net_would_block( const mbedtls_net_context *ctx )
 {
+#ifdef fnctl
     int err = errno;
 
     /*
@@ -303,6 +304,10 @@ static int net_would_block( const mbedtls_net_context *ctx )
             return( 1 );
     }
     return( 0 );
+#else
+	// Azure Sphere Porting: Azure Sphere OS does not support fcntl syscall, net_would_block return 0 always
+	return 0;
+#endif
 }
 #endif /* ( _WIN32 || _WIN32_WCE ) && !EFIX64 && !EFI32 */
 
@@ -434,7 +439,12 @@ int mbedtls_net_set_block( mbedtls_net_context *ctx )
     u_long n = 0;
     return( ioctlsocket( ctx->fd, FIONBIO, &n ) );
 #else
+	// Azure Sphere Porting: Azure Sphere OS does not support fcntl syscall, set_block API is not supported
+#ifdef fcntl
     return( fcntl( ctx->fd, F_SETFL, fcntl( ctx->fd, F_GETFL ) & ~O_NONBLOCK ) );
+#else
+	return -1; 
+#endif
 #endif
 }
 
@@ -445,7 +455,12 @@ int mbedtls_net_set_nonblock( mbedtls_net_context *ctx )
     u_long n = 1;
     return( ioctlsocket( ctx->fd, FIONBIO, &n ) );
 #else
+	// Azure Sphere Porting: Azure Sphere OS does not support fcntl syscall, set_nonblock API is not supported
+#ifdef fcntl
     return( fcntl( ctx->fd, F_SETFL, fcntl( ctx->fd, F_GETFL ) | O_NONBLOCK ) );
+#else
+	return -1;
+#endif
 #endif
 }
 
