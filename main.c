@@ -1,5 +1,4 @@
-﻿
-#if !defined(MBEDTLS_CONFIG_FILE)
+﻿#if !defined(MBEDTLS_CONFIG_FILE)
 #include "mbedtls/config.h"
 #else
 #include MBEDTLS_CONFIG_FILE
@@ -114,7 +113,7 @@ int main(void)
 	mbedtls_printf("  . Loading the CA root certificate ...");
 	fflush(stdout);
 
-	ret = Storage_OpenFileInImagePackage("GlobalSignOrganizationValidationCASHA256G2.crt");
+	ret = Storage_OpenFileInImagePackage("GlobalSignRootCA.crt");
 	if (ret < 0) {
 		mbedtls_printf(" failed\n  !  Storage_OpenFileInImagePackage fail\n\n");
 		goto exit;

@@ -123,7 +123,7 @@
     <UpToDateCheckInput Include="app_manifest.json" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="GlobalSignOrganizationValidationCASHA256G2.crt">
+    <None Include="GlobalSignRootCA.crt">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">true</DeploymentContent>
     </None>
   </ItemGroup>
@@ -138,6 +138,7 @@
     <Link>
       <LibraryDependencies>applibs;pthread;gcc_s;c</LibraryDependencies>
       <AdditionalOptions>-Wl,--no-undefined -nodefaultlibs %(AdditionalOptions)</AdditionalOptions>
+      <GenerateMapFile Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">.\bin\ARM\Debug\azure-sphere-mbedtls.map</GenerateMapFile>
     </Link>
   </ItemDefinitionGroup>
 </Project>

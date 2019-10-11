@@ -261,7 +261,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="GlobalSignOrganizationValidationCASHA256G2.crt">
+    <None Include="GlobalSignRootCA.crt">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
