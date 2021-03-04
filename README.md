@@ -2,7 +2,7 @@
 
 This sample demonstrates mbedTLS based SSL client on Azure Sphere OS (CA7). It downloads a page from www.badiu.com once server side verficiation has passed. 
 
-After 20.07 OS release of Azure Sphere OS, wolfSSL client is supported and exposed for user to use. Check https://docs.microsoft.com/en-us/azure-sphere/app-development/wolfssl-tls for details.
+After 20.07 OS release of Azure Sphere, wolfSSL client is supported and exposed for user to use. Check https://docs.microsoft.com/en-us/azure-sphere/app-development/wolfssl-tls for details.
 
 
 To use this sample, clone the repository locally if you haven't already done so:
