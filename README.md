@@ -8,16 +8,14 @@ As of today, Azure Sphere OS does not expose a TLS/SSL API to developer. If a ne
 To use this sample, clone the repository locally if you haven't already done so:
 
 ```
-git clone https://github.com/xiongyu0523/azure-sphere-mbedtls.git
+git clone --recurse-submodules https://github.com/xiongyu0523/azure-sphere-mbedtls.git
 ```
 
 ## mbedTLS port NOTE
 
-1. Offical mbedTLS 2.16.3 release is used. 
-   
-2. In net_sockets.c, fnctl is commented as Azure Sphere OS does not support this syscall. So `mbedtls_net_set_block` and `mbedtls_net_set_nonblock` are not implemented for user. 
+1. Offical mbedTLS 2.16.9 release is used. 
 
-3. In config.h
+2. In mbedtls_user_config.h
    
    - `MBEDTLS_FS_IO` is disabled since several FS syscall is not available on Azure Sphere OS
    - `MBEDTLS_NO_PLATFORM_ENTROPY` is enabled, and a pluton based strong entropy is added to poll at application level by `mbedtls_entropy_add_source`
@@ -39,9 +37,7 @@ git clone https://github.com/xiongyu0523/azure-sphere-mbedtls.git
         }
         ```
 
-4. Beta API is enabled to use `Storage_OpenFileInImagePackage` to retreive CA certificate from imagepackage. 
-   
-5. DER binary format certifcate is supported, to add more CA certificate, follow this [link](https://docs.microsoft.com/en-us/azure-sphere/app-development/storage#add-a-file-to-an-image-package) to add to project. At application level, call API `mbedtls_x509_crt_parse_der` for several times to add all CA required certificates. 
+4. DER binary format certifcate is supported, to add more CA certificate, follow this [link](https://docs.microsoft.com/en-us/azure-sphere/app-development/storage#add-a-file-to-an-image-package) to add to project. At application level, call API `mbedtls_x509_crt_parse_der` for several times to add all CA required certificates. 
 
 
 ## To build and run the sample
@@ -49,21 +45,21 @@ git clone https://github.com/xiongyu0523/azure-sphere-mbedtls.git
 ### Prep your device
 
 1. Ensure that your Azure Sphere device is connected to your PC, and your PC is connected to the internet.
-2. Even if you've performed this set up previously, ensure that you have Azure Sphere SDK version 19.09. In an Azure Sphere Developer Command Prompt, run **azsphere show-version** to check. Download and install the [latest SDK](https://aka.ms/AzureSphereSDKDownload) as needed.
+2. Even if you've performed this set up previously, ensure that you have Azure Sphere SDK version 21.01. In an Azure Sphere Developer Command Prompt, run **azsphere show-version** to check. Download and install the [latest SDK](https://aka.ms/AzureSphereSDKDownload) as needed.
 3. Open Azure Sphere Developer Command Prompt and issue the following command:
 
    ```
-   azsphere dev prep-debug
+   azsphere device enable-development
    ```
 
 
 ### Build and deploy the application
 
-1. Start Visual Studio.
-2. From the **File** menu, select **Open > Open a project or Solution** and navigate to the git folder 
-3. Select the file azure-sphere-mbedtls.sln and then click **Open**. 
-4. Press **F5** to build and debug the application
-5. In **Device Output** window, you will observe below logs:
+1. Start Visual Studio 2019.
+2. From the File menu, select Open > CMake... and navigate to the folder that contains the sample to load
+3. In Solution Explorer, right-click the CMakeLists.txt file, and select Generate Cache for azure-sphere-mqtts. This step performs the cmake build process to generate the native ninja build files.
+4. In Solution Explorer, right-click the CMakeLists.txt file, and select Build to build the project and generate .imagepackage target.
+5. Double click CMakeLists.txt file and press F5 to start the application with debugging.
    
    ```
     . Azure Sphere network is... ok
