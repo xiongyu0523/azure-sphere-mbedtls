@@ -1,4 +1,4 @@
 # Ignore output directories
-/bin
-/obj
-/.vs
+/out/
+/install/
+/.vs/

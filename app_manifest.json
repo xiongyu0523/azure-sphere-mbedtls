@@ -1,15 +1,12 @@
 {
   "SchemaVersion": 1,
   "Name" : "azure_sphere_mbedtls",
-  "ComponentId" : "7cb85673-0699-474c-bde2-c89844c51a1a",
+  "ComponentId" : "ed04db2f-c4d6-45b4-9005-eed561e10623",
   "EntryPoint": "/bin/app",
   "CmdArgs": [],
   "Capabilities": {
     "AllowedConnections": [ "www.baidu.com" ],
-    "MutableStorage": { "SizeKB": 8 },
-    "Gpio": [ 9 ],
-    "Uart": [],
-    "WifiConfig": false
+    "MutableStorage": { "SizeKB": 8 }
   },
   "ApplicationType":"Default"
 }

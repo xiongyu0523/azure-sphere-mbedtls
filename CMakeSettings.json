@@ -1,0 +1,61 @@
+﻿{
+  "environments": [ { "environment": "AzureSphere" } ],
+  "configurations": [
+    {
+      "name": "ARM-Debug",
+      "generator": "Ninja",
+      "configurationType": "Debug",
+      "inheritEnvironments": [ "AzureSphere" ],
+      "buildRoot": "${projectDir}\\out\\${name}",
+      "installRoot": "${projectDir}\\out\\${name}",
+      "cmakeToolchain": "${env.AzureSphereDefaultSDKDir}CMakeFiles\\AzureSphereToolchain.cmake",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "AZURE_SPHERE_TARGET_API_SET",
+          "value": "latest-lts",
+          "type": "STRING"
+        },
+        {
+          "name": "ENABLE_TESTING",
+          "value": "False",
+          "type": "BOOL"
+        },
+        {
+          "name": "ENABLE_PROGRAMS",
+          "value": "False",
+          "type": "BOOL"
+        }
+      ]
+    },
+    {
+      "name": "ARM-Release",
+      "generator": "Ninja",
+      "configurationType": "Release",
+      "inheritEnvironments": [ "AzureSphere" ],
+      "buildRoot": "${projectDir}\\out\\${name}",
+      "installRoot": "${projectDir}\\out\\${name}",
+      "cmakeToolchain": "${env.AzureSphereDefaultSDKDir}CMakeFiles\\AzureSphereToolchain.cmake",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "AZURE_SPHERE_TARGET_API_SET",
+          "value": "latest-lts",
+          "type": "STRING"
+        },
+        {
+          "name": "ENABLE_PROGRAMS",
+          "value": "False",
+          "type": "BOOL"
+        },
+        {
+          "name": "ENABLE_TESTING",
+          "value": "False",
+          "type": "BOOL"
+        }
+      ]
+    }
+  ]
+}
