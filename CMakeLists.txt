@@ -11,7 +11,6 @@ azsphere_configure_api(TARGET_API_SET "8")
 include_directories(./
 					mbedtls/include)
 
-link_directories(mbed/Library)
 
 
 add_compile_definitions(MBEDTLS_CONFIG_FILE="mbedtls_user_config.h")
@@ -25,4 +24,5 @@ add_subdirectory (mbedtls)
 add_executable (${PROJECT_NAME} main.c)
 target_link_libraries (${PROJECT_NAME} applibs pthread gcc_s c mbedtls mbedcrypto mbedx509)
 
-azsphere_target_add_image_package(${PROJECT_NAME})
+azsphere_target_add_image_package(${PROJECT_NAME} RESOURCE_FILES "GlobalSignRootCA.crt")
+
